@@ -2,7 +2,6 @@
 #include <cuda.h>
 #include <cuda_runtime.h>
 
-// 简单的矩阵乘法 CUDA 内核
 __global__ void matmul_kernel(const float *A, const float *B, float *C, int M, int K, int N) {
     int row = blockIdx.y * blockDim.y + threadIdx.y;
     int col = blockIdx.x * blockDim.x + threadIdx.x;
@@ -16,7 +15,6 @@ __global__ void matmul_kernel(const float *A, const float *B, float *C, int M, i
 }
 
 torch::Tensor matmul_cuda(torch::Tensor A, torch::Tensor B) {
-    // 假设 A 的形状为 [M, K]，B 的形状为 [K, N]
     const int M = A.size(0);
     const int K = A.size(1);
     const int N = B.size(1);

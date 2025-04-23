@@ -11,7 +11,7 @@ train_embeddings = torch.load("train_embeddings.pt")
 test_embeddings = torch.load("test_embeddings.pt")
 train_labels = torch.load("train_labels.pt")
 test_labels = torch.load("test_labels.pt")
-print("Embedding 加载完成!")
+print("Embedding loaded!")
 
 class SimpleTransformer(nn.Module):
     def __init__(self, d_model, heads):
@@ -102,6 +102,7 @@ batch_size = 32
 num_batches = len(train_embeddings) // batch_size
 
 start_time = time.time()
+print("Start training  with numpy accelerate computation...")
 for epoch in range(epochs):
     model.train()
     total_loss = 0.0
@@ -119,27 +120,29 @@ for epoch in range(epochs):
     
     avg_loss = total_loss / num_batches
     print(f"Epoch {epoch + 1}, Loss: {avg_loss:.4f}")
+total_time = time.time() - start_time
+print(f"Training completed, consuming time: {total_time:.2f} s")
 
-    # 每 20 轮保存一次 checkpoint
-    if (epoch + 1) % 20 == 0:
-        checkpoint_path = os.path.join(CHECKPOINT_DIR, f"checkpoint_epoch_{epoch + 1}.pt")
-        torch.save({
-            'epoch': epoch + 1,
-            'model_state_dict': model.state_dict(),
-            'optimizer_state_dict': optimizer.state_dict(),
-            'loss': avg_loss,
-        }, checkpoint_path)
-        print(f"Checkpoint saved at {checkpoint_path}")
+# 每 20 轮保存一次 checkpoint
+if (epoch + 1) % 20 == 0:
+    checkpoint_path = os.path.join(CHECKPOINT_DIR, f"checkpoint_epoch_{epoch + 1}.pt")
+    torch.save({
+        'epoch': epoch + 1,
+        'model_state_dict': model.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict(),
+        'loss': avg_loss,
+    }, checkpoint_path)
+    print(f"Checkpoint saved at {checkpoint_path}")
 
 # 训练结束后保存最终模型
 final_model_path = os.path.join(SAVED_MODEL_DIR, "final_model.pth")
 torch.save(model.state_dict(), final_model_path)
 print(f"Final model saved at {final_model_path}")
-    
+
+# 测试模型
 model.eval()
 with torch.no_grad():
     predictions = model(test_embeddings)
     predicted_labels = torch.argmax(predictions, dim=1)
-
 accuracy = (predicted_labels == test_labels).sum().item() / len(test_labels)
-print(f"测试集准确率: {accuracy:.4f}")
+print(f"Test accuracy: {accuracy:.4f}")

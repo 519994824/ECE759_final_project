@@ -13,7 +13,7 @@ train_embeddings = torch.load("train_embeddings.pt")
 test_embeddings = torch.load("test_embeddings.pt")
 train_labels = torch.load("train_labels.pt")
 test_labels = torch.load("test_labels.pt")
-print("Embedding 加载完成!")
+print("Embedding loaded!")
 
 # 为避免多线程干扰，设置线程数（仅针对 PyTorch 内部操作）
 torch.set_num_threads(2)
@@ -127,7 +127,7 @@ batch_size = 32
 num_batches = len(train_embeddings) // batch_size
 
 start_time = time.time()
-print("开始训练 CPU 模型（numpy加速矩阵运算）...")
+print("Start training  with numpy accelerate computation...")
 for epoch in range(epochs):
     model_cpu.train()
     total_loss = 0.0
@@ -143,7 +143,7 @@ for epoch in range(epochs):
     avg_loss = total_loss / num_batches
     print(f"Epoch {epoch+1}, Loss: {avg_loss:.4f}")
 total_time = time.time() - start_time
-print(f"训练完成，总用时: {total_time:.2f} s")
+print(f"Training completed, consuming time: {total_time:.2f} s")
 
 # 测试模型
 model_cpu.eval()
@@ -151,4 +151,4 @@ with torch.no_grad():
     predictions = model_cpu(test_embeddings)
     predicted_labels = torch.argmax(predictions, dim=1)
 accuracy = (predicted_labels == test_labels).sum().item() / len(test_labels)
-print(f"测试集准确率: {accuracy:.4f}")
+print(f"Test accuracy: {accuracy:.4f}")

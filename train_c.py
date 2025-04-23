@@ -122,8 +122,8 @@ for epoch in range(epochs):
         total_loss += loss.item()
     avg_loss = total_loss / num_batches
     print(f"Epoch {epoch+1}, Loss: {avg_loss:.4f}")
-overall_time = time.time() - start_time
-print(f"训练完成，总用时: {overall_time:.2f} s")
+total_time = time.time() - start_time
+print(f"Training completed, consuming time: {total_time:.2f} s")
 
 # 测试模型
 model.eval()
@@ -131,4 +131,4 @@ with torch.no_grad():
     predictions = model(test_embeddings)
     predicted_labels = torch.argmax(predictions, dim=1)
 accuracy = (predicted_labels == test_labels).sum().item() / len(test_labels)
-print(f"测试集准确率: {accuracy:.4f}")
+print(f"Test accuracy: {accuracy:.4f}")
