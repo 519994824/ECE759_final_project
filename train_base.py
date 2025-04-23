@@ -1,3 +1,4 @@
+import time
 import torch.nn as nn
 import torch.optim as optim
 from tqdm import tqdm
@@ -100,6 +101,7 @@ epochs = 10  # 例如训练 100 轮
 batch_size = 32
 num_batches = len(train_embeddings) // batch_size
 
+start_time = time.time()
 for epoch in range(epochs):
     model.train()
     total_loss = 0.0

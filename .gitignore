@@ -1,3 +1,10 @@
 python_base
 bert
 models
+
+
+*.log
+*.tmp
+__pycache__/
+*.pyc
+*.pt
