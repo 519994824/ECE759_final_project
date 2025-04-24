@@ -6,7 +6,7 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 from tqdm import tqdm
-from config import CHECKPOINT_DIR, SAVED_MODEL_DIR, CACHE_DIR, EPOCH
+from config import CHECKPOINT_DIR, SAVED_MODEL_DIR, CACHE_DIR, EPOCH, BATCH_SIZE
 
 train_embeddings = torch.load("train_embeddings.pt")
 test_embeddings = torch.load("test_embeddings.pt")
@@ -96,7 +96,7 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model_cpu.parameters(), lr=1e-4)
 
 epochs = EPOCH
-batch_size = 32
+batch_size = BATCH_SIZE
 num_batches = len(train_embeddings) // batch_size
 
 start_time = time.time()

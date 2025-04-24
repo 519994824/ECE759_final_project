@@ -1,7 +1,7 @@
 from datasets import load_dataset
 from transformers import BertTokenizer
 import torch
-from config import CHECKPOINT_DIR, SAVED_MODEL_DIR, CACHE_DIR
+from config import CHECKPOINT_DIR, SAVED_MODEL_DIR, CACHE_DIR, BATCH_SIZE
 import os
 
 dataset = load_dataset("imdb")
@@ -48,8 +48,8 @@ def get_bert_embedding(input_ids, attention_mask, batch_size=16):
 
 # train_embeddings = get_bert_embedding(train_input_ids, train_attention_mask)
 # test_embeddings = get_bert_embedding(test_input_ids, test_attention_mask)
-train_embeddings = get_bert_embedding(train_input_ids, train_attention_mask, batch_size=16)
-test_embeddings = get_bert_embedding(test_input_ids, test_attention_mask, batch_size=16)
+train_embeddings = get_bert_embedding(train_input_ids, train_attention_mask, batch_size=BATCH_SIZE)
+test_embeddings = get_bert_embedding(test_input_ids, test_attention_mask, batch_size=BATCH_SIZE)
 
 print("BERT embedding computed!")
 print("train dataset embedding shape:", train_embeddings.shape)  # (batch_size, seq_len, hidden_dim)

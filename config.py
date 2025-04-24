@@ -9,3 +9,4 @@ CHECKPOINT_DIR = os.path.join(BASE_DIR, "models", "checkpoints")
 SAVED_MODEL_DIR = os.path.join(BASE_DIR, "models", "saved_model")
 CACHE_DIR = os.path.join(BASE_DIR, "bert")
 EPOCH = 5
+BATCH_SIZE = 32

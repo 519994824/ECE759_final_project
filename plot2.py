@@ -1,8 +1,7 @@
-# 重新导入依赖，因为执行状态被重置
 import re
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 
-# 重新定义提取 time cost 的函数
 def extract_time_cost(filepath):
     with open(filepath, 'r') as f:
         text = f.read()
@@ -11,31 +10,31 @@ def extract_time_cost(filepath):
 
 time_costs = {
     "Numpy (CPU)": extract_time_cost("./result_np.md"),
-    "PyTorch": extract_time_cost("./result_base.md"),
-    "Custom Cuda Operator": extract_time_cost("./result_c_v1.md"),
-    "Custom Cuda Operators with Multiple Optimizations": extract_time_cost("./result_c_v2.md"),
+    "PyTorch (GPU)": extract_time_cost("./result_torch.md"),
+    "CUDA Optimized\n(Multiple Techniques)": extract_time_cost("./result_c.md"),
 }
 
+fig, ax = plt.subplots(figsize=(12, 6))
 
-# time_costs = {
-#     "Based on Numpy (CPU)": extract_time_cost("./result_np.md"),
-#     "Based on PyTorch (using GPU)": extract_time_cost("./result_base.md"),
-#     "Based on PyTorch with optimized CUDA (GPU + CUDA)": extract_time_cost("./result_c_v1.md"),
-#     "Based on PyTorch with optimized CUDA and optimized softmax (GPU + CUDA)": extract_time_cost("./result_c_v2.md"),
-# }
+bars = ax.bar(time_costs.keys(), time_costs.values(), width=0.6)
 
-plt.figure(figsize=(16, 8))
-bars = plt.bar(time_costs.keys(), time_costs.values())
-plt.xlabel("Strategy")
-plt.ylabel("Total Training Time (s)")
-plt.yscale("log")
-plt.title("Total Time Cost (Log Scale)")
-plt.grid(axis="y", which="both", linestyle='--', linewidth=0.5)
+ax.set_yscale("log")
+ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda y, _: f'{y:.0f}s'))
+
+ax.set_title("Comparison of Training Time Across Methods", fontsize=16, weight='bold')
+ax.set_xlabel("Training Strategy", fontsize=12)
+ax.set_ylabel("Total Training Time (log scale, seconds)", fontsize=12)
 
 for bar in bars:
     height = bar.get_height()
-    plt.text(bar.get_x() + bar.get_width() / 2, height, f"{height:.2f}s",
-             ha='center', va='bottom', fontsize=10)
+    ax.text(bar.get_x() + bar.get_width() / 2, height * 1.05, f"{height:.2f}s",
+            ha='center', va='bottom', fontsize=11)
+
+plt.xticks(fontsize=11)
+plt.yticks(fontsize=11)
+
+ax.grid(True, axis='y', which='both', linestyle='--', linewidth=0.6, alpha=0.7)
 
 plt.tight_layout()
+plt.savefig("Performance_Comparison.png", dpi=300)
 plt.show()
